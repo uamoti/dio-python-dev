@@ -24,15 +24,15 @@ class PessoaFisica(Cliente):
         super().__init__(endereco)
 
     @property
-    def cpf:
+    def cpf(self):
         return self._cpf
 
     @property
-    def nome:
+    def nome(self):
         return self._nome
 
     @property
-    def nascimento:
+    def nascimento(self):
         return self._nascimento
 
 class Conta:
@@ -86,8 +86,12 @@ class Conta:
             self._saldo += valor
             return True
 
+    def exibir_historico(self):
+        for transacao in self.historico.transacoes:
+            print(f"{transacao['tipo']}: {transacao['valor']} - {transacao['data'].strftime('%d/%m/%Y')}")
+
     def __str__(self):
-        return f"Agência: {self.agencia}\nNúmero: {self.numero}\nTitular: {self.cliente.nome}"
+        return f"Agência: {self.agencia}\nNúmero: {self.numero}\nTitular: {self.cliente.nome}\n"
 
 class ContaCorrente(Conta):
     def __init__(self, cliente, numero, limite=500, max_saques=3):
@@ -98,10 +102,10 @@ class ContaCorrente(Conta):
     def sacar(self, valor):
         n_saques = len([t for t in self.historico.transacoes if t["tipo"] == Saque.__name__])
 
-        if n_saques >= max_saques:
-            print("Você já atingiu o limite de saques por hoje. Tente novamente amanhã")
+        if n_saques >= self._max_saques:
+            print("\nVocê já atingiu o limite de saques por hoje. Tente novamente amanhã\n")
         elif valor > self._limite:
-            print(f"Valor máximo para saques é {self._limite}")
+            print(f"\nValor máximo para saques é {self._limite}\n")
         else:
             return super().sacar(valor)
         return False
@@ -109,6 +113,10 @@ class ContaCorrente(Conta):
 class Historico:
     def __init__(self):
         self._transacoes = []
+
+    @property
+    def transacoes(self):
+        return self._transacoes
 
     def adicionar_transacao(self, transacao):
         self._transacoes.append(
@@ -133,8 +141,11 @@ class Deposito(Transacao):
     def __init__(self, valor):
         self._valor = valor
 
-    def registrar(self, conta):
+    @property
+    def valor(self):
+        return self._valor
 
+    def registrar(self, conta):
         if conta.depositar(self._valor):
             conta.historico.adicionar_transacao(self)
 
@@ -142,45 +153,48 @@ class Saque(Transacao):
     def __init__(self, valor):
         self._valor = valor
 
-    def registrar(self, conta):
+    @property
+    def valor(self):
+        return self._valor
 
+    def registrar(self, conta):
         if conta.sacar(self._valor):
             conta.historico.adicionar_transacao(self)
 
-def sacar():
+def sacar(contas, clientes):
     cpf = input("Digite seu CPF (somente números): ")
     cliente = consultar_cpf(cpf, clientes)
-    contas_cliente = listar_contas_cliente(contas, cliente)
+    #contas_cliente = listar_contas_cliente(contas, cliente)
 
     if not cliente:
-        print("Cliente não encontrado.")
-    elif not contas_cliente:
-        print("Você não possui contas, cadastre uma primeiro.")
+        print("\nCliente não encontrado.\n")
+    elif not listar_contas_cliente(contas, cliente):
+        print("\nVocê não possui contas, cadastre uma primeiro.\n")
     else:
-        valor = float(print("Valor do saque: "))
+        valor = float(input("Valor do saque: "))
         transacao = Saque(valor)
-        conta = contas_cliente[0]
+        conta = listar_contas_cliente(contas, cliente)[0]
         cliente.realizar_transacao(conta, transacao)
 
-def depositar():
+def depositar(contas, clientes):
     cpf = input("Digite seu CPF (somente números): ")
     cliente = consultar_cpf(cpf, clientes)
-    contas_cliente = listar_contas_cliente(contas, cliente)
+    #contas_cliente = listar_contas_cliente(contas, cliente)
 
     if not cliente:
-        print("Cliente não encontrado.")
-    elif not contas_cliente:
-        print("Você não possui contas, cadastre uma primeiro.")
+        print("\nCliente não encontrado.")
+    elif not listar_contas_cliente(contas, cliente):
+        print("\nVocê não possui contas, cadastre uma primeiro.\n")
     else:
-        valor = float(print("Valor do saque: "))
+        valor = float(input("Valor do deposito: "))
         transacao = Deposito(valor)
-        conta = contas_cliente[0]
+        conta = listar_contas_cliente(contas, cliente)[0]
         cliente.realizar_transacao(conta, transacao)
 
-def criar_cliente():
+def cadastrar_cliente(clientes):
     cpf = input("Digite o CPF do cliente (somente números): ")
-    if consultar_cpf(cpf):
-        print("Cliente já cadastrado.")
+    if consultar_cpf(cpf, clientes):
+        print("\nCliente já cadastrado.\n")
     else:
         nome = input("Nome completo: ")
         endereco = input("Endereço: ")
@@ -188,25 +202,33 @@ def criar_cliente():
         clientes.append(
             PessoaFisica(cpf, nome, nascimento, endereco)
         )
-        print("Cliente cadastrado com sucesso!")
+        print("\nCliente cadastrado com sucesso!\n")
 
-def criar_conta():
+def criar_conta(contas, clientes):
     cpf = input("Digite o CPF do cliente (somente números): ")
     cliente = consultar_cpf(cpf, clientes)
 
     if not cliente:
-        print("Cliente não cadastrado; realize o cadastro primeiro")
+        print("\nCliente não cadastrado; realize o cadastro primeiro.\n")
     else:
-        numero = f"{len(contas) + 1:04}"
+        numero = f"{(len(contas) + 1):04}"
         conta = ContaCorrente.nova_conta(cliente, numero)
+        contas.append(conta)
+        cliente.adicionar_conta(conta)
+        print("Conta cadastrada com sucesso!\n")
+        print(conta)
+        return True
 
 def listar_contas_cliente(contas, cliente):
     cpf = cliente.cpf
-    contas_cliente = [c for c in contas if conta.cliente.cpf == cpf]
+    contas_cliente = [c for c in contas if c.cliente.cpf == cpf]
     return contas_cliente if contas_cliente else None
 
-def exibir_extrato():
-    pass
+def exibir_extrato(contas, clientes):
+    cpf = input("Digite o CPF do cliente (somente números): ")
+    cliente = consultar_cpf(cpf, clientes)
+    conta = listar_contas_cliente(contas, cliente)[0]
+    conta.exibir_historico()
 
 def consultar_cpf(cpf, clientes):
     cliente = [c for c in clientes if c.cpf == cpf]
@@ -232,25 +254,26 @@ def main():
     clientes = []
     contas = []
 
-    opcao = menu()
+    while True:
+        opcao = menu()
 
-    match opcao:
-        case 'd':
-            pass
-        case 's':
-            pass
-        case 'e':
-            pass
-        case 'l':
-            pass
-        case 't':
-            pass
-        case 'r':
-            pass
-        case 'q':
-            break
-        case _:
-            print("Opção inválida.")
+        match opcao:
+            case 'd':
+                depositar(contas, clientes)
+            case 's':
+                sacar(contas, clientes)
+            case 'e':
+                exibir_extrato(contas, clientes)
+            case 'l':
+                cadastrar_cliente(clientes)
+            case 't':
+                criar_conta(contas, clientes)
+            case 'r':
+                pass
+            case 'q':
+                break
+            case _:
+                print("Opção inválida.\n")
 
 if __name__ == '__main__':
     main()
