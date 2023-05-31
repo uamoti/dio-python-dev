@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import json
 from sqlalchemy.orm import (
     Session,
     declarative_base,
@@ -9,7 +10,7 @@ from sqlalchemy import (
     Column,
     String,
     Integer,
-    Numeric,
+    Float,
     ForeignKey,
     create_engine,
     select,
@@ -26,14 +27,14 @@ class Client(Base):
     name = Column(String(40))
     cpf = Column(String(9))
     address = Column(String(30))
-    account = relationship('Account', back_populates='clients')
+    account = relationship('Account', back_populates='client')
     
     def __repr__(self):
         return (
             f'Client(id={self.id_}, '
-            'name={self.name}, '
-            'CPF={self.cpf}, '
-            'address={self.address})'
+            f'name={self.name}, '
+            f'CPF={self.cpf}, '
+            f'address={self.address})'
         )
 
 
@@ -44,22 +45,44 @@ class Account(Base):
     branch = Column(String)
     number = Column(Integer)
     client_id = Column(Integer, ForeignKey('clients.id_'), nullable=False)
-    balance = Column(Numeric)
-    client = relationship('Client', back_populates='accounts')
+    balance = Column(Float(precision=2))
+    client = relationship('Client', back_populates='account')
     
     def __repr__(self):
         return (
             f'Account(id={self.id_}, '
-            'type={self.acc_type}, '
-            'branch={self.branch}, '
-            'number={self.number}, '
-            'balance={self.balance})'
+            f'type={self.acc_type}, '
+            f'branch={self.branch}, '
+            f'number={self.number}, '
+            f'balance={self.balance})'
         )
 
 engine = create_engine('sqlite://') # Connection to DB
 Base.metadata.create_all(engine) # Create tables in DB
 inspector = inspect(engine)
 
-print("Table names: ", inspector.get_table_names())
-print(inspector.default_schema_name)
+print("\nTable names: ", inspector.get_table_names())
+print("Schema name:", inspector.default_schema_name)
+
+client_data = json.load(open('clients.json'))
+clients = [Client(**data) for data in client_data]
+account_data = json.load(open('accounts.json'))
+accounts = [Account(**data) for data in account_data]
+
+session = Session(engine)
+session.add_all(clients)
+session.add_all(accounts)
+session.commit()
+
+print("\nCurrent clients:")
+query = select(Client)
+
+for client in session.scalars(query):
+    print(client)
+
+print("\nCurrent accounts:")
+query = select(Account)
+
+for acc in session.scalars(query):
+    print(acc)
 
