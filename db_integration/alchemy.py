@@ -69,20 +69,33 @@ clients = [Client(**data) for data in client_data]
 account_data = json.load(open('accounts.json'))
 accounts = [Account(**data) for data in account_data]
 
+# Create session, add records and commit changes
 session = Session(engine)
 session.add_all(clients)
 session.add_all(accounts)
 session.commit()
 
-print("\nCurrent clients:")
-query = select(Client)
+print("\nCLIENTS TABLE:")
+results = session.query(Client).all()
 
-for client in session.scalars(query):
-    print(client)
+for r in results:
+    print(r)
 
-print("\nCurrent accounts:")
+print("\nACCOUNTS TABLE:")
 query = select(Account)
 
 for acc in session.scalars(query):
     print(acc)
+
+print("\nCLIENTS ORDERED BY NAME:")
+results = session.query(Client.name).order_by()
+
+for name in results:
+    print(name[0])
+
+print("\nCLIENTS AND BALANCE:")
+results = session.query(Client, Account).join(Account).all()
+
+for client, account in results:
+    print(client.name, account.balance)
 
