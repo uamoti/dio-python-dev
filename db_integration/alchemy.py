@@ -97,5 +97,5 @@ print("\nCLIENTS AND BALANCE:")
 results = session.query(Client, Account).join(Account).all()
 
 for client, account in results:
-    print(client.name, account.balance)
+    print(client.name, account.acc_type, account.balance)
 

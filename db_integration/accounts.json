@@ -1,10 +1,10 @@
 [{"acc_type":"savings","branch":"6636-4","number":"62239-Q","client_id":8,"balance":2808.15},
 {"acc_type":"savings","branch":"4260-0","number":"75896-H","client_id":9,"balance":139.47},
-{"acc_type":"savings","branch":"2390-4","number":"81834-W","client_id":9,"balance":1897.56},
+{"acc_type":"check","branch":"2390-4","number":"81834-W","client_id":9,"balance":1897.56},
 {"acc_type":"check","branch":"0643-8","number":"12135-Z","client_id":5,"balance":309.31},
 {"acc_type":"check","branch":"8105-2","number":"87110-I","client_id":3,"balance":4535.52},
 {"acc_type":"savings","branch":"5606-2","number":"93643-M","client_id":8,"balance":2498.14},
 {"acc_type":"savings","branch":"1728-1","number":"04602-G","client_id":7,"balance":1091.71},
 {"acc_type":"savings","branch":"3168-5","number":"36103-M","client_id":1,"balance":1969.40},
 {"acc_type":"check","branch":"1415-0","number":"66015-7","client_id":8,"balance":2350.23},
-{"acc_type":"check","branch":"5324-1","number":"09058-C","client_id":8,"balance":3747.96}]
+{"acc_type":"savings","branch":"5324-1","number":"09058-C","client_id":8,"balance":3747.96}]
