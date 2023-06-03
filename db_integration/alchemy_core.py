@@ -53,14 +53,14 @@ conn = engine.connect()
 conn.execute(clients.insert(), client_data)
 conn.execute(accounts.insert(), account_data)
 
-result = engine.execute(text('select * from clients'))
+result = conn.execute(text('select * from clients'))
 print("\nCLIENTS TABLE:")
 
 for row in result:
     print(row)
 
 query = text('select clients.name, accounts.acc_type, accounts.balance from clients join accounts on clients.id = accounts.client_id')
-result = engine.execute(query)
+result = conn.execute(query)
 print("\nCLIENTS, ACCOUNTS AND BALANCES:")
 
 for row in result:
