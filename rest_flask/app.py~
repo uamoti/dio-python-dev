@@ -1,0 +1,26 @@
+#!/usr/bin/python3
+
+from flask import Flask, jsonify, request
+
+tasks = [
+    {
+        'id': 0,
+        'person': 'John',
+        'task': 'Do the dishes',
+        'status': 'complete'
+    },
+    {
+        'id': 1,
+        'person': 'Mary',
+        'task': 'Groceries',
+        'status': 'pending'
+    }
+]
+
+app = Flask(__name__)
+
+
+@app.route('/', methods=['GET'])
+def show_tasks():
+
+    return jsonify(tasks)
