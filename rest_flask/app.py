@@ -23,7 +23,6 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def task_list():
-
     if request.method == 'GET':
         return jsonify(tasks)
     else:
@@ -33,14 +32,11 @@ def task_list():
 
 @app.route('/<int:idx>', methods=['GET'])
 def get_task(idx):
-
     return jsonify(tasks[idx])
 
 @app.route('/<int:idx>', methods=['PUT'])
 def update_task(idx):
-
     tasks[idx]['completed'] = not tasks[idx]['completed']
-
     return jsonify({'status': 0, 'message': f'Task {idx} sucessfully updated!'})
 
 if __name__ == '__main__':
