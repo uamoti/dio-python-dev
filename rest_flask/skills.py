@@ -34,7 +34,7 @@ class ListSkills(Resource):
         return skillist
 
     def post(self):
-        data = json.loads(request.data)
+        data = request.data
         skillist.append(data)
         return {'status': 0, 'message': 'Skill successfully registered'}
 

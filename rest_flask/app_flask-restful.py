@@ -3,7 +3,7 @@
 import json
 from flask import Flask, request
 from flask_restful import Resource, Api
-from skills import Skills, ListSkills
+from skills import Skill, ListSkills
 
 class Developer(Resource):
     def get(self, idx):
