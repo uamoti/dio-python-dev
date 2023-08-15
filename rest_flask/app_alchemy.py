@@ -89,16 +89,19 @@ session.add_all(skills)
 session.add_all(devskill)
 session.commit()
 
+results = session.query(Developer).all()
 print('-' * 20)
 print('DEVELOPERS TABLE')
 print('-' * 20)
-results = session.query(Developer).all()
 
 for result in results:
     print(result)
 
 stmt = select(Developer.name, Skill.name).join_from(Developer, DevSkill).join(Skill)
 result = session.execute(stmt)
+print('-' * 30)
+print('DEVELOPERS AND THEIR SKILLS')
+print('-' * 30)
 
 for name, skill in result:
     print(f'{name} - {skill}')
