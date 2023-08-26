@@ -227,13 +227,9 @@ class ListActivityDb(Resource):
             response = {'status': 1, 'message': 'Responsible person not registered.'}
         else:
             desc = data['description']
-            comp = data['completed']
-
             resp = person[0]
-            #date = data['created']
             activity = Activity(
                 description=desc,
-                completed=comp,
                 responsible=resp
             )
             activity.save()
