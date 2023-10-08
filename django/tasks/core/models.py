@@ -10,4 +10,7 @@ class Event(models.Model):
     created = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     
-    
+    def __str__(self):
+        return (f'{self.title}\n'
+                f'{self.date.strftime("%d-%m-%y")}\n'
+                f'{self.description}\n')
