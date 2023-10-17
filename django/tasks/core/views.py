@@ -4,6 +4,6 @@ from core.models import Event
 # Create your views here.
 def list_events(request):
     events = Event.objects.all()
-    response = {'events': events}
+    # response = {'events': events}
 
-    return HttpResponse(events)
+    return render(request, 'calendar.html', {'events': events})
