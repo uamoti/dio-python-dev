@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<h1>Calendar</h1>
+<h2>Events</h2>
+<ul>
+  {% for event in events %}
+  <li>
+    {{ event }}
+  </li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
