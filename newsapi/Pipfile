@@ -8,6 +8,7 @@ fastapi = "*"
 newsapi-python = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 jinja2 = "*"
+python-multipart = "*"
 
 [dev-packages]
 

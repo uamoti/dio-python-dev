@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Top News</title>
+  </head>
+  <body>
+    <h1>Top News from NewsAPI.org</h1>
+    <div>
+      <ul>
+	{% for entry in news %}
+	<li>{{ entry.title }}</li>
+	{% endfor %}
+      </ul>
+    </div>
+  </body>
+</html>

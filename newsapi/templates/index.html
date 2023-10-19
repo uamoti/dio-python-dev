@@ -5,13 +5,17 @@
     <title>Top News</title>
   </head>
   <body>
-    <h1>Top News from NewsAPI.org</h1>
-    <div>
-      <ul>
-	{% for entry in news %}
-	<li>{{ entry.title }}</li>
-	{% endfor %}
-      </ul>
-    </div>
+    <h2>Choose a country</h2>
+    <form id="choose-country" action="" method="post">
+      <label for="country">Country</label>
+      <input type="text" id="country" name="country" list="country-list">
+      <button type="submit">Choose</button>
+      <datalist id="country-list">
+	<option value="br">Brazil</option>
+	<option value="fr">France</option>
+	<option value="se">Sweden</option>
+	<option value="no">Norway</option>
+	<option value="pt">Portugal</option>
+    </form>
   </body>
 </html>
