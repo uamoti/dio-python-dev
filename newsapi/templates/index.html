@@ -6,16 +6,14 @@
   </head>
   <body>
     <h2>Choose a country</h2>
-    <form id="choose-country" action="" method="post">
+    <form id="choose-country" method="post">
       <label for="country">Country</label>
       <input type="text" id="country" name="country" list="country-list">
       <button type="submit">Choose</button>
       <datalist id="country-list">
-	<option value="br">Brazil</option>
-	<option value="fr">France</option>
-	<option value="se">Sweden</option>
-	<option value="no">Norway</option>
-	<option value="pt">Portugal</option>
+	{% for country in countries.keys() %}
+	<option value="{{ country }}"></option>
+	{% endfor %}
     </form>
   </body>
 </html>
