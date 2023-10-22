@@ -1,0 +1,13 @@
+h1 {
+    text-align: center;
+}
+
+div.news-item {
+    border-radius: 20px;
+    text-align: center;
+    height: 150px;
+    width: 50%;
+    margin: 5px 25% 5px;
+    padding: 10px;
+    border: 2px solid;
+}
