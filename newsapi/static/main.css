@@ -5,9 +5,18 @@ h1 {
 div.news-item {
     border-radius: 20px;
     text-align: center;
-    height: 150px;
+    height: 100px;
     width: 50%;
     margin: 5px 25% 5px;
     padding: 10px;
     border: 2px solid;
+}
+
+div.news-title {
+    padding: 2px;
+    margin: auto;
+    /*height: 80%;*/
+    background-color: lightgray;
+    opacity: 80%;
+    border-radius:15px;
 }

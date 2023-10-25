@@ -11,7 +11,9 @@
       {% for entry in news %}
       <a href="{{ entry.url }}">
 	<div class="news-item" style="background-image: url({{ entry.img }});">
-	  <p>{{ entry.title }}</p>
+	  <div class="news-title">
+	    <p>{{ entry.title }}</p>
+	  </div>
 	</div>
       </a>
       {% endfor %}
