@@ -6,16 +6,16 @@
     <title>Top News</title>
   </head>
   <body>
-    <h1>Top News from NewsAPI.org</h1>
+    <h1>Top News</h1>
     <div>
       {% for entry in news %}
-      <a href="{{ entry.url }}">
-	<div class="news-item" style="background-image: url({{ entry.img }});">
+      <div class="news-item" style="background-image: url({{ entry.img }});">
+	<a href="{{ entry.url }}">
 	  <div class="news-title">
 	    <p>{{ entry.title }}</p>
 	  </div>
-	</div>
-      </a>
+	</a>
+      </div>
       {% endfor %}
     </div>
     <a href="/">
