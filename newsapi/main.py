@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from newsapi import NewsApiClient
 from pydantic import BaseModel, HttpUrl, Field
+from pydantic_core.core_schema import list_schema
 from resources import countries
 from pymongo import MongoClient
 
@@ -29,16 +30,22 @@ app.mount('/static', StaticFiles(directory='static'), name='static')
 
 # If the collection is empty or the posts are old, then I query the API.
 # Otherwise, retrieve the documents and display.
-@app.post('/top/{country}', response_class=HTMLResponse)
-def get_country_top_news(request: Request, country: str):
+
+def get_country_top_news(country: str) -> list:
     db_news = topnews.find_one({'country': country})
-    if db_news is None:
+    try:
+        old_news = db_news['time'] + dt.timedelta(hours=12) < dt.datetime.now()
+        _id = db_news['_id']
+    except TypeError:
+        old_news = True
+        _id = None
+    if old_news:
         query = api.get_top_headlines(country=country, language=None)
         data = query['articles']
         articles = [
             {'title': item['title'],
              'url': item['url'],
-             'img': item['urlToImage'] or 'https://picsum.photos/640/120'}
+             'img': item['urlToImage'] or 'https://picsum.photos/1000/120'}
            for item in data
         ]
         document = {
@@ -46,9 +53,17 @@ def get_country_top_news(request: Request, country: str):
             'time': dt.datetime.now(),
             'articles': articles
         }
+        if _id:
+            topnews.delete_one({'_id': _id})
         topnews.insert_one(document)
     else:
         articles = db_news['articles']
+    return articles
+
+@app.get('/top/{country}', response_class=HTMLResponse)
+@app.post('/top/{country}', response_class=HTMLResponse)
+def country_topnews(request: Request, country: str):
+    articles = get_country_top_news(country)
     return templates.TemplateResponse('topnews.html', {'request': request, 'news': articles})
 
 @app.get('/', response_class=HTMLResponse)
@@ -58,6 +73,6 @@ def index(request: Request):
 @app.post('/', response_class=RedirectResponse)
 def get_country(request: Request, country: str = Form()):
     country = country.title()
-    redirect_url = request.url_for('get_country_top_news', country=countries[country])
+    redirect_url = request.url_for('country_topnews', country=countries[country])
     return RedirectResponse(redirect_url)
 
