@@ -67,12 +67,16 @@ def country_topnews(request: Request, country: str):
     return templates.TemplateResponse('topnews.html', {'request': request, 'news': articles})
 
 @app.get('/', response_class=HTMLResponse)
+# @app.post('/', response_class=HTMLResponse)
 def index(request: Request):
     return templates.TemplateResponse('index.html', {'request': request, 'countries': countries})
 
 @app.post('/', response_class=RedirectResponse)
 def get_country(request: Request, country: str = Form()):
-    country = country.title()
-    redirect_url = request.url_for('country_topnews', country=countries[country])
+    try:
+        country = countries[country.title()]
+        redirect_url = request.url_for('country_topnews', country=country)
+    except KeyError:
+        return RedirectResponse('/', status_code=302)
     return RedirectResponse(redirect_url)
 
