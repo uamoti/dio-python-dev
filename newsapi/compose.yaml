@@ -1,0 +1,21 @@
+services:
+  app:
+    image: newsapi
+    ports:
+      - 8000:8000
+  newsdb:
+    image: mongo:5-focal
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: uamoti
+      MONGO_INITDB_ROOT_PASSWORD: uamoti
+  dbatlas:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: uamoti
+      ME_CONFIG_MONGODB_ADMINPASSWORD: uamoti
+      ME_CONFIG_MONGODB_URL: mongodb://uamoti:uamoti@newsdb:27017
+      

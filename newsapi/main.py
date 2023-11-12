@@ -17,10 +17,10 @@ class News(BaseModel):
 with open('newsapi.key') as f:
     API_KEY = f.readline().strip()
 
-with open('mongo.uri') as f:
-    MONGO_URI = f.readline().strip()
+# with open('mongo.uri') as f:
+#     MONGO_URI = f.readline().strip()
 
-connection = MongoClient(MONGO_URI)
+connection = MongoClient('mongodb://uamoti:uamoti@newsdb:27017/')
 db = connection.newsapi
 topnews = db.topnews
 api = NewsApiClient(API_KEY)
